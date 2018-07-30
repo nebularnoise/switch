@@ -1,0 +1,27 @@
+{
+  "name": "switch",
+  "version": "1.0.0",
+  "description": "switch",
+  "main": "index.js",
+  "scripts": {
+    "server-dev": "nodemon --exec babel-node -- server/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nebularnoise/switch.git"
+  },
+  "author": "Thibault Geoffroy",
+  "license": "MIT",
+  "dependencies": {
+    "compression": "^1.7.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "express-jwt": "^5.3.1",
+    "helmet": "^3.13.0",
+    "memory-cache": "^0.2.0",
+    "morgan": "^1.9.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0"
+  }
+}
