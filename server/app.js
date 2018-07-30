@@ -22,10 +22,18 @@ app.use(
 )
 app.use(compression())
 
-const publicKey = fs.readFileSync('./switch-key.pub')
+const publicKey = fs.readFileSync('./jwtRS256.key.pub')
 
-app.get('/api/open', jwt({ secret: publicKey }), (req, res) => open(req, res))
-app.get('/api/close', jwt({ secret: publicKey }), (req, res) => close(req, res))
+app.get(
+  '/api/open',
+  jwt({ secret: publicKey, algorithms: ['RS256'] }),
+  (req, res) => open(req, res)
+)
+app.get(
+  '/api/close',
+  jwt({ secret: publicKey, algorithms: ['RS256'] }),
+  (req, res) => close(req, res)
+)
 app.get('/api/is-open', (req, res) => isOpen(res))
 
 // const credentials = {

@@ -1,11 +1,12 @@
 import cache from 'memory-cache'
 
-const open = async res => {
+const open = async (req, res) => {
   if (!req.user.admin) {
     return res.sendStatus(401)
   } else {
     try {
       cache.put('status', true)
+      console.log('OPEN !')
       res.status(200).json(true)
     } catch (error) {
       console.log('An error occured: \n' + error)
@@ -14,12 +15,13 @@ const open = async res => {
   }
 }
 
-const close = async res => {
+const close = async (req, res) => {
   if (!req.user.admin) {
     return res.sendStatus(401)
   } else {
     try {
       cache.put('status', false)
+      console.log('CLOSED !')
       res.status(200).json(false)
     } catch (error) {
       console.log('An error occured: \n' + error)

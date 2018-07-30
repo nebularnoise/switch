@@ -4,7 +4,9 @@
   "description": "switch",
   "main": "index.js",
   "scripts": {
-    "server-dev": "nodemon --exec babel-node -- server/app.js"
+    "server-dev": "nodemon --exec babel-node -- server/app.js",
+    "open": "node -e \"require('./admin-client').open()\"",
+    "close": "node -e \"require('./admin-client').close()\""
   },
   "repository": {
     "type": "git",
@@ -13,11 +15,13 @@
   "author": "Thibault Geoffroy",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.18.0",
     "compression": "^1.7.3",
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "express-jwt": "^5.3.1",
     "helmet": "^3.13.0",
+    "jsonwebtoken": "^8.3.0",
     "memory-cache": "^0.2.0",
     "morgan": "^1.9.0"
   },
