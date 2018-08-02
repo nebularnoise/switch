@@ -10,29 +10,33 @@ import morgan from 'morgan'
 
 import { open, isOpen, close } from './routes'
 
+import { API_PORT, WEBSOCKET_PORT } from '../config.js'
+
 const app = express()
 
 app.use(morgan('common'))
 app.use(helmet())
 app.use(
-  cors({
-    methods: ['GET'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-  })
+	cors({
+		methods: ['GET'],
+		allowedHeaders: ['Content-Type', 'Authorization']
+	})
 )
 app.use(compression())
+
+var socket = require('socket.io')(WEBSOCKET_PORT)
 
 const publicKey = fs.readFileSync('./jwtRS256.key.pub')
 
 app.get(
-  '/api/open',
-  jwt({ secret: publicKey, algorithms: ['RS256'] }),
-  (req, res) => open(req, res)
+	'/api/open',
+	jwt({ secret: publicKey, algorithms: ['RS256'] }),
+	(req, res) => open(req, res, socket)
 )
 app.get(
-  '/api/close',
-  jwt({ secret: publicKey, algorithms: ['RS256'] }),
-  (req, res) => close(req, res)
+	'/api/close',
+	jwt({ secret: publicKey, algorithms: ['RS256'] }),
+	(req, res) => close(req, res, socket)
 )
 app.get('/api/is-open', (req, res) => isOpen(res))
 
@@ -44,6 +48,6 @@ app.get('/api/is-open', (req, res) => isOpen(res))
 //   console.log('Server listening on port 8000!')
 // })
 
-app.listen(8000, () => {
-  console.log(`Server listening on port 8000!`)
+app.listen(API_PORT, () => {
+	console.log(`Server listening on port ${API_PORT}!`)
 })
