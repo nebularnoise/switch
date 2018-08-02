@@ -6,7 +6,7 @@ import cors from 'cors'
 import jwt from 'express-jwt'
 import fs from 'fs'
 import morgan from 'morgan'
-//import https from 'https'
+import cache from 'memory-cache'
 
 import { open, isOpen, close } from './routes'
 
@@ -25,6 +25,9 @@ app.use(
 app.use(compression())
 
 var socket = require('socket.io')(WEBSOCKET_PORT)
+socket.on('connection', s => {
+	cache.get('status') ? s.emit('open') : s.emit('close')
+})
 
 const publicKey = fs.readFileSync('./jwtRS256.key.pub')
 
