@@ -16,6 +16,16 @@ const token = jwt.sign(
 	{ algorithm: 'RS256' }
 )
 
+var buttons = require('rpi-gpio-buttons')([11], {debounce: 500});
+
+// bind to the clicked event and check for the assigned pins when clicked
+buttons.on('clicked', function (pin) {
+  get(`http://${SERVER_URL}:${API_PORT}/api/is-open`)
+	.then(function (isOpen) {
+    isOpen ? close() : open();
+  })
+});
+
 function open() {
 	console.log('OPENING')
 	get(`http://${SERVER_URL}:${API_PORT}/api/open`, {
