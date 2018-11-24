@@ -11,14 +11,17 @@ import cache from 'memory-cache'
 import { open, isOpen, close } from './routes'
 
 import { API_PORT, WEBSOCKET_PORT } from '../config.js'
+import { getFunctions } from './push.js'
+const functionsFromise = getFunctions()
 
 const app = express()
 
 app.use(morgan('common'))
 app.use(helmet())
+app.use(bodyParser.json())
 app.use(
 	cors({
-		methods: ['GET'],
+		methods: ['GET', 'POST'],
 		allowedHeaders: ['Content-Type', 'Authorization']
 	})
 )
@@ -43,13 +46,19 @@ app.get(
 )
 app.get('/api/is-open', (req, res) => isOpen(res))
 
-// const credentials = {
-//   key: fs.readFileSync('switch.key', 'utf8'),
-//   cert: fs.readFileSync('switch.cert', 'utf8')
-// }
-// https.createServer(credentials, app).listen(8000, function() {
-//   console.log('Server listening on port 8000!')
-// })
+app.post('/api/push/register', async (req, res) => {
+	const subscription = req.body.subscription
+	console.log(subscription)
+	res.status(201).json()
+	const { subscribe } = await functionsFromise
+	subscribe(subscription)
+})
+
+app.delete('/api/push/unregister/:id', async (req, res) => {
+	res.status(200)
+	const { unsubscribe } = await functionsFromise
+	unsubscribe(req.params.id)
+})
 
 app.listen(API_PORT, () => {
 	console.log(`Server listening on port ${API_PORT}!`)
