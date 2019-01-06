@@ -16,14 +16,15 @@ const token = jwt.sign(
   { algorithm: "RS256" }
 );
 
-var buttons = require("rpi-gpio-buttons")([11], { debounce: 500 });
-
-// bind to the clicked event and check for the assigned pins when clicked
-buttons.on("clicked", function(pin) {
+// BUTTON listen
+var gpio = require("rpi-gpio");
+gpio.on("change", function(channel, value) {
+  console.log("Channel " + channel + " value is now " + value);
   get(`http://${SERVER_URL}:${API_PORT}/api/is-open`).then(function(isOpen) {
     isOpen ? close() : open();
   });
 });
+gpio.setup(11, gpio.DIR_IN, gpio.EDGE_RISING);
 
 function open() {
   console.log("OPENING");
